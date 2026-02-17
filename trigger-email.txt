@@ -1,0 +1,4 @@
+# Trigger Email Action Workflow
+
+This file triggers the email action workflow to ensure it's the most recent run.
+Updated at: 2026-02-17 14:45
