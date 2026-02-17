@@ -1,0 +1,44 @@
+name: Cache Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: cache-1966743
+          restore-keys: |
+            cache-1966743
+      
+      - name: prime-cache-1966743
+        run: |
+          if [ "${{ steps.cache.outputs.cache-hit }}" == "true" ]; then
+            echo "Cache hit! Cache was restored successfully."
+          else
+            echo "Cache miss! Building cache for the first time."
+          fi
+          echo "Cache hit status: ${{ steps.cache.outputs.cache-hit }}"
+      
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Installing dependencies to populate cache..."
+          mkdir -p node_modules
+          echo "Dependencies installed" > node_modules/README.txt
+      
+      - name: Display completion
+        run: echo "Workflow completed successfully!"
